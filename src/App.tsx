@@ -1,34 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCovidData } from './store/slices/data.slice';
+
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch();
+  const { data, status, error } = useSelector((state: any) => state.covidData);
 
+  useEffect(() => {
+    dispatch(fetchCovidData())
+  }, [dispatch]);
+
+  console.log('adad', data)
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <main>
+      {status === 'succeeded' && data && (
+        <div>
+          <p>Total positive cases: {data[0]?.positive}</p>
+          <p>Total deaths: {data[0]?.death}</p>
+          {/* Add more data points as needed */}
+        </div>
+      )}
+    </main>
   )
 }
 
